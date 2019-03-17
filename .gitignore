@@ -1,0 +1,11 @@
+.bash_history
+.bash_logout
+.bash_profile
+.bashrc
+.cache/
+.config/
+.gitconfig
+.node_repl_history
+.nvm/
+.ssh/
+package.json
