@@ -11,6 +11,7 @@
 package.json
 .viminfo
 .git-prompt.sh
-.test/
-.tmp/
-.temp/
+test/
+tmp/
+temp/
+.npm

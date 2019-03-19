@@ -4,7 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "test/test.js"
+ 	"prehoge": "echo \"pre hoge !!\"",
+	"hoge": "echo \"hoge !!\"",
+	"posthoge": "echo \"post hoge !!\""
   },
   "repository": {
     "type": "git",
