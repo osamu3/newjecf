@@ -1,0 +1,19 @@
+{
+  "name": "osm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osamu3/newjecf.git"
+  },
+  "author": "osamu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/osamu3/newjecf/issues"
+  },
+  "homepage": "https://github.com/osamu3/newjecf#readme"
+}
