@@ -17,17 +17,20 @@ source $HOME/.git-prompt.sh
 
 #cf:https://qiita.com/varmil/items/9b0aeafa85975474e9b6
 # プロンプトに各種情報を表示
-GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWDIRTYSTATE=true
 #addされてない変更(unstaged)があったとき"*"を表示する、addされているがcommitされていない変更(staged)があったとき"+"を表示する。
 
-GIT_PS1_SHOWUPSTREAM=1
+GIT_PS1_SHOWUPSTREAM=true
 #現在のブランチがupstreamより進んでいるとき">"を、遅れているとき"<"を、遅れてるけど独自の変更もあるとき"<>"を表示する。
 
-GIT_PS1_SHOWUNTRACKEDFILES=1
+GIT_PS1_SHOWUNTRACKEDFILES=true
 #addされてない新規ファイルがある(untracked)とき"%"を表示する
 
-GIT_PS1_SHOWSTASHSTATE=1
+GIT_PS1_SHOWSTASHSTATE=true
 #stashになにか入っている(stashed)とき"$"を表示する。
+
+GIT_PS1_SHOWCOLORHINTS=true
+#表示内容のカラー化
 
 ############### ターミナルのコマンド受付状態の表示変更
 # \u ユーザ名
