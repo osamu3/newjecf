@@ -9,3 +9,5 @@
 .nvm/
 .ssh/
 package.json
+.viminfo
+.git-prompt.sh
