@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
- 	"prehoge": "echo \"pre hoge !!\"",
-	"hoge": "echo \"hoge !!\"",
-	"posthoge": "echo \"post hoge !!\""
+    "prehoge": "echo \"pre hoge !!\"",
+    "hoge": "echo \"hoge !!\"",
+    "posthoge": "echo \"post hoge !!\""
   },
   "repository": {
     "type": "git",
@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/osamu3/newjecf/issues"
   },
-  "homepage": "https://github.com/osamu3/newjecf#readme"
+  "homepage": "https://github.com/osamu3/newjecf#readme",
+  "dependencies": {
+    "debug": "^4.1.1"
+  }
 }
