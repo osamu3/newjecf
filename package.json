@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/osamu3/newjecf#readme",
   "dependencies": {
-    "debug": "^4.1.1"
+    "debug": "^4.1.1",
+    "express": "^4.16.4"
   }
 }
