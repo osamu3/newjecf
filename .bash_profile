@@ -18,9 +18,16 @@ source $HOME/.git-prompt.sh
 #cf:https://qiita.com/varmil/items/9b0aeafa85975474e9b6
 # プロンプトに各種情報を表示
 GIT_PS1_SHOWDIRTYSTATE=1
+#addされてない変更(unstaged)があったとき"*"を表示する、addされているがcommitされていない変更(staged)があったとき"+"を表示する。
+
 GIT_PS1_SHOWUPSTREAM=1
-GIT_PS1_SHOWUNTRACKEDFILES=
+#現在のブランチがupstreamより進んでいるとき">"を、遅れているとき"<"を、遅れてるけど独自の変更もあるとき"<>"を表示する。
+
+GIT_PS1_SHOWUNTRACKEDFILES=1
+#addされてない新規ファイルがある(untracked)とき"%"を表示する
+
 GIT_PS1_SHOWSTASHSTATE=1
+#stashになにか入っている(stashed)とき"$"を表示する。
 
 ############### ターミナルのコマンド受付状態の表示変更
 # \u ユーザ名
@@ -37,4 +44,5 @@ GIT_PS1_SHOWSTASHSTATE=1
 # https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 
 #export PS1='\W/\u:\[\e[1;32m$(__git_ps1 "%s")\[\e[0m\]\$ '
-export PS1='\[\033[1;32m\]\u\[\033[00m\]:\[\033[1;34m\]\w\[\033[1;31m\]$(__git_ps1)\[\033[00m\] \$ '
+export PS1='\[\033[1;34m\w\[\033[00m\]:\[\033[1;32m\]\u\[\033[1;31m\]$(__git_ps1)\[\033[00m\]\$ '
+#export PS1='\[\033[1;32m\]\u\[\033[00m\]:\[\033[1;34m\]\w\[\033[1;31m\]$(__git_ps1)\[\033[00m\] \$ '
