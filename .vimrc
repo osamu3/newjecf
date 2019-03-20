@@ -1,3 +1,5 @@
+"https://qiita.com/ahiruman5/items/4f3c845500c172a02935
+"快適にコーディングするためのvimrc解説
 set encoding=utf-8
 scriptencoding utf-8
 set fileencoding=utf-8 " 保存時の文字コード
@@ -63,3 +65,77 @@ if &term =~ "xterm"
 
     inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
 endif
+
+
+"Vimプラグインの導入
+"「NeoBundle」という、Vimプラグインを管理するためのVimプラグインを使う。
+if has('vim_starting')
+    " 初回起動時のみruntimepathにNeoBundleのパスを指定する
+    set runtimepath+=~/.vim/bundle/neobundle.vim/
+
+    " NeoBundleが未インストールであればgit cloneする・・・・・・①
+    if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
+        echo "install NeoBundle..."
+        :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
+    endif
+endif
+
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+" インストールするVimプラグインを以下に記述
+" NeoBundle自身を管理
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+"=======================↓==============================
+" ここに追加したいVimプラグインを記述する・・・・・・②
+
+" カラースキームmolokai
+"NeoBundle 'tomasr/molokai'
+
+"----------------------------------------------------------
+" molokaiの設定
+"----------------------------------------------------------
+"if neobundle#is_installed('molokai') " molokaiがインストールされていれば
+"    colorscheme molokai " カラースキームにmolokaiを設定する
+"B
+"endif
+
+set t_Co=256 " iTerm2など既に256色環境なら無くても良い
+syntax enable " 構文に色を付ける
+
+
+" ステータスラインの表示内容強化
+NeoBundle 'itchyny/lightline.vim'
+
+"----------------------------------------------------------
+" ステータスラインの設定
+"----------------------------------------------------------
+set laststatus=2 " ステータスラインを常に表示
+set showmode " 現在のモードを表示
+set showcmd " 打ったコマンドをステータスラインの下に表示
+set ruler " ステータスラインの右側にカーソルの現在位置を表示する
+
+
+" 末尾の全角と半角の空白文字を赤くハイライト
+NeoBundle 'bronson/vim-trailing-whitespace'
+
+" インデントの可視化
+NeoBundle 'Yggdroot/indentLine'
+
+
+
+
+
+
+
+
+
+"==========================↑プラグイン==========================
+call neobundle#end()
+
+" ファイルタイプ別のVimプラグイン/インデントを有効にする
+filetype plugin indent on
+
+" 未インストールのVimプラグインがある場合、インストールするかどうかを尋ねてくれるようにする設定・・・・・・③
+NeoBundleCheck
+
