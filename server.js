@@ -6,11 +6,15 @@ const port = 8080;
 const favicon = require('serve-favicon');
 
 // app.use/routes/etc...
-//
+const routes = require('./routes/index');/
 
-var server    = app.listen(port, () => console.log('Example app listening on port 8080!'));
+/ view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
-var io        = require('socket.io').listen(server);
+const server = app.listen(port, () => console.log('Example app listening on port 8080!'));
+
+var io     = require('socket.io').listen(server);
 
 // io.sockets.on('connection', function (socket) {
 //   ...
