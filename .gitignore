@@ -19,3 +19,6 @@ local/
 .npm
 package-lock.json
 node_modules/
+checkPrxy.sh
+runPrxy.sh
+stopPrxy.sh
