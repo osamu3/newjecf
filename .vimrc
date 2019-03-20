@@ -56,6 +56,10 @@ if has('lua')
     NeoBundle 'Shougo/neosnippet-snippets'
 endif
 
+" 日本語ヘルプ
+NeoBundle 'vim-jp/vimdoc-ja'
+
+
 call neobundle#end()
 
 " ファイルタイプ別のVimプラグイン/インデントを有効にする
