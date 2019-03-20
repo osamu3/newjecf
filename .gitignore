@@ -15,6 +15,7 @@ package.json
 test/
 tmp/
 temp/
+local/
 .npm
 package-lock.json
 node_modules/
