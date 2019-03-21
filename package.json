@@ -21,6 +21,7 @@
   "dependencies": {
     "body-parse": "^0.1.0",
     "debug": "^4.1.1",
+    "ejs": "^2.6.1",
     "express": "^4.16.4",
     "serve-favicon": "^2.5.0",
     "socket.io": "^2.2.0"
