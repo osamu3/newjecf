@@ -22,3 +22,4 @@ node_modules/
 checkPrxy.sh
 runPrxy.sh
 stopPrxy.sh
+public/phot/
