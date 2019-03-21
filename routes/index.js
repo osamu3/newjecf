@@ -8,9 +8,7 @@ router.get('/', function (req, res) {
 });
 
 module.exports = router;
-//D
 //↑このモジュールは、server.jsから、↓として使用されている。
-//const routes = require('./routes/index');
-//app.use('/', routes);//ルートへのアクセスで、↑で定義したroutesを呼び出す。
-//server.js内では、「route」ではなく「routes」と複数形になっていることに注意。
-//
+//const rootAccss = require('./routes/index');
+//webサイトのルートへのアクセス( app.use('/'.... ) で、
+//rootAccss→router.get('/',…)を実行する。

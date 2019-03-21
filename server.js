@@ -5,23 +5,28 @@ const path    = require('path');
 const favicon = require('serve-favicon');
 const fs      = require('fs');
 // app.use/routes/etc...
-const routes  = require('./routes/index');
+const rootAccss  = require('./routes/index');
 
 const app     = express();
 const port    = 8080;
 
+let userId;
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+//app.engine('html',require('ejs').renderFile);//<- 'html'を使えるように
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-//routesは、./routes/index.jsを呼び出す。
-//routesは、./routes/index.js内で、「route」が定義されている。
-app.use('/', routes);//ルートへのアクセスで、↑で定義したroutesを呼び出す。
+//↓ルートへのアクセスで、rootAccdd(./routes/index.js)を呼び出す。
+//index.js内のapp.get('/'…)で、描画するファイルを指定している。
+app.use('/', rootAccss);
 
-//エラー処理は、ルーティングの指定より後にしないとエラーが出る。
+
+
+//↓のエラー処理は、ルーティングの指定より後にしないとエラーが出る。
 //cf:https://chaika.hatenablog.com/entry/2015/10/07/135131
 // catch 404 and forward to error handler ← 404発生時の処理
 app.use(function (req, res, next) {
