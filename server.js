@@ -20,6 +20,11 @@ app.set('view engine', 'ejs');
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Express での静的ファイルの提供 ←重要
+//http://expressjs.com/ja/starter/static-files.htmlより
+app.use('/static', express.static('public'));//←別名定義例(クライアント側で使用)これで、"public"を"/static" で利用できる。
+app.use(express.static('public'));	//パス文字列無しで"public"を使用できるように設定。
+
 //↓ルートへのアクセスで、rootAccdd(./routes/index.js)を呼び出す。
 //index.js内のapp.get('/'…)で、描画するファイルを指定している。
 app.use('/', rootAccss);
@@ -44,13 +49,13 @@ io.on('connection', function (socket) {
 	console.log("connected!!");
 	//ブラウザからサーバーへの全ての着信をクライアントに転送
 	socket.on('Bs2Sv', function (msg) {
-		console.log("(app.js:L76)サーバーログ:ブラウザからの着信がありました。:" + msg);
+		console.log("(server.js:L47)サーバーログ:ブラウザからの着信がありました。:" + msg);
 		io.emit('Sv2Pi', msg);
 	});
 
 	//パイからメッセージが届いた。※現在関係ない
 	socket.on('Pi2Sv', function (msg) {
-		console.log("(app.js:L89)サーバーログ：ラズパイからの着信がありました。:" + msg);
+		console.log("(server.js:L53):ラズパイからの着信がありました。:" + msg);
 		io.emit('Sv2Cl', "サーバーより各位へ--->ラズパイからのmsgを転送します。:" + msg);
 	});
 

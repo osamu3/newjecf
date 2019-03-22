@@ -19,64 +19,64 @@
         <p>『content = <%= content %>』</p>
         <p>これは「ejs」</p>
 
-    	<p>
-    		<input type="button" value="準備中" onclick="takeAPic()" id="takeAPic" disabled>
-    	</p>
-	    <h1>ここに画像を表示　</h1>
-	    <div>
-		    <img width="200" src="phot/phot.JPG" id="photId">
-	    </div>
+        <p>
+            <input type="button" value="準備中" onclick="takeAPic()" id="takeAPic" disabled>
+        </p>
+        <h1>ここに画像を表示　</h1>
+        <div>
+            <img width="200" src="phot/phot.JPG" id="photId">
+        </div>
 
-
-
-
-    	<script src="/socket.io/socket.io.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
 
         <!-- 以下、bodyタグを閉じる直前で読み込むこと -->
         <!-- 最初にjQuery、次にPopper.js、次にBootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 
-	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-	<script>
-        var socket = io.connect('http://localhost');
-        //const socket = io();
-//		const log = function () { console.log(arguments); }//log出力用
-		let photUName = "";
+    <script>
+        //var socket = io.connect('http://localhost:8080');
+        //var socket = io.connect('http://133.167.47.45:8080');
+        const socket = io();
+        //const log = function () { console.log(arguments); }//log出力用
+        let photUName = "";
 
-		socket.on('connect', function () {//サーバー⇔ブラウザ間のソケットIOコネクションが確立
-			console.log('サーバーからのメッセージ着信！');
-			console.log('connected:サーバー⇔ブラウザ間のソケットIOコネクション確立しました。');
+        socket.on('connect', function () {//サーバー⇔ブラウザ間のソケットIOコネクションが確立
+            console.log('サーバーからのメッセージ着信！');
+            console.log('connected:サーバー⇔ブラウザ間のソケットIOコネクション確立しました。');
 
-//			socket.emit('Bs2Sv', 'ContinueToProcess?');//接続を継続しても良いかどうかを問い合わせる。
-			//console.log('サーバーへメッセージ送信：socket.emit("Bs2Sv", "openTheDoor");');
-			//socket.emit('Bs2Sv', 'openTheDoor');
-			console.log('');
-			return false;
-		});
+            socket.emit('Bs2Sv', 'ContinueToProcess?');//接続を継続しても良いかどうかを問い合わせる。
+            console.log('サーバーへメッセージ送信：socket.emit("Bs2Sv", "openTheDoor");');
+            socket.emit('Bs2Sv', 'openTheDoor');
+            console.log('');
+            return false;
+        });
 
-		//シャッター命令発令
-		function takeAPic() {
-//			socket.emit('Bs2Sv', 'takeAPic');
-			console.log('サーバーへメッセージ送信：socket.emit("Bs2Sv", "takeAPic");');
-			return false;
-		}
+        //シャッター命令発令
+        function takeAPic() {
+            socket.emit('Bs2Sv', 'takeAPic');
+            console.log('サーバーへメッセージ送信：socket.emit("Bs2Sv", "takeAPic");');
+            return false;
+        }
 
-//		socket.on('Sv2Bs', function (msg) {
-//			if (msg === 'ContinueOK') {
-//				$('#takeAPic').disabled = false;
-//				$('#takeAPic').value = "写真を撮る";
-//			}
-//		});
+        socket.on('Sv2Bs', function (msg) {
+            console.log('サーバーからメッセージ着信：'+msg);
+            if (msg === 'ContinueOK') {
+                console.log('写真撮影準備完了');
+                $('#takeAPic').disabled = false;
+                $('#takeAPic').value = "写真を撮る";
+            }
+        });
 
-		//サーバーからラズパイ画像の転送があった。
-//		socket.on('Sv2FtpPht', function (photUName) {
- //           alert("[" + photUName + "]が送られてきました。リロードしましょう。");
- //           $('#photId').src = "phot/" + photUName;
+        //サーバーからラズパイ画像の転送があった。
+        socket.on('Sv2FtpPht', function (photUName) {
+            alert("[" + photUName + "]が送られてきました。リロードしましょう。");
+            $('#photId').src = "phot/" + photUName;
             ///////////ここ   .srappend($('<li>').text(msg));
             //location.reload(true);//サーバーからリロード
-//		});
-	</script>
+        });
+    </script>
     </body>
 </html>

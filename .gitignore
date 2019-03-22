@@ -23,3 +23,4 @@ checkPrxy.sh
 runPrxy.sh
 stopPrxy.sh
 public/phot/
+views/favicon.ico
