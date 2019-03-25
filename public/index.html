@@ -17,10 +17,10 @@
 
         <h1><%= title %></h1>
         <p>『content = <%= content %>』</p>
-        <p>これは「ejs」</p>
+        <p>view engin is「html」</p>
 
         <p>
-            <input type="button" value="準備中" onclick="takeAPic()" id="takeAPic" disabled>
+            <input type="button" value="待機中" onclick="takeAPic()" id="takeAPic" disabled>
         </p>
         <h1>ここに画像を表示　</h1>
         <div>
@@ -44,29 +44,37 @@
         let photUName = "";
 
         socket.on('connect', function () {//サーバー⇔ブラウザ間のソケットIOコネクションが確立
-            console.log('サーバーからのメッセージ着信！');
             console.log('connected:サーバー⇔ブラウザ間のソケットIOコネクション確立しました。');
 
+            //サーバーへ接続を継続しても良いかどうかを問い合わせる。
+            console.log('サーバーへメッセージ送信：socket.emit("Bs2Sv", "ContinueToProcess?");');
             socket.emit('Bs2Sv', 'ContinueToProcess?');//接続を継続しても良いかどうかを問い合わせる。
-            console.log('サーバーへメッセージ送信：socket.emit("Bs2Sv", "openTheDoor");');
-            socket.emit('Bs2Sv', 'openTheDoor');
-            console.log('');
             return false;
         });
 
         //シャッター命令発令
         function takeAPic() {
-            socket.emit('Bs2Sv', 'takeAPic');
-            console.log('サーバーへメッセージ送信：socket.emit("Bs2Sv", "takeAPic");');
+            console.log('サーバーへメッセージ送信：socket.emit("Bs2Sv", "TakeAPic");');
+            socket.emit('Bs2Sv','takeAPic');
+            //
+            $('#takeAPic')[0].disabled = true;
+            $('#takeAPic')[0].value = "準備中";
             return false;
         }
 
         socket.on('Sv2Bs', function (msg) {
             console.log('サーバーからメッセージ着信：'+msg);
+
             if (msg === 'ContinueOK') {
+                console.log('サーバーへメッセージ送信：socket.emit("Bs2Sv", "OpenTheDoor");');
+                socket.emit('Bs2Sv','OpenTheDoor');
+                $('#takeAPic')[0].value = "準備中";
+                //console.log('ボタンのキャプション:' + $('#takeAPic')[0].value);
+            }
+            if(msg === 'DoorWasOpened'){
                 console.log('写真撮影準備完了');
-                $('#takeAPic').disabled = false;
-                $('#takeAPic').value = "写真を撮る";
+                $('#takeAPic')[0].disabled = false;
+                $('#takeAPic')[0].value = "写真を撮る";
             }
         });
 
@@ -77,6 +85,10 @@
             ///////////ここ   .srappend($('<li>').text(msg));
             //location.reload(true);//サーバーからリロード
         });
+        socket.on("disconnect", function () {
+            console.log("[disconnect]イベントが発生:");
+        });
+
     </script>
     </body>
 </html>
