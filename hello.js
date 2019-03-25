@@ -11,9 +11,11 @@ const fs = require('fs');
 
 const PORT = 8080;
 
-app.set('view engin','html');
+//app.set('view engin','html');
+app.set('view engin','ejs');
 
 app.get('/',function(req,res){
+	//res.render("index", {});
     res.render("landing",{message:"hello osam3!!"});
 });
 

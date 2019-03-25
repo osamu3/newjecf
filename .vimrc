@@ -25,6 +25,10 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 " インストールするVimプラグインを以下に記述
 " NeoBundle自身を管理
 NeoBundleFetch 'Shougo/neobundle.vim'
+
+"ファイルをツリー表示
+NeoBundle 'scrooloose/nerdtree'
+
 " カラースキームmolokai
 NeoBundle 'tomasr/molokai'
 " solarized カラースキーム
@@ -263,3 +267,6 @@ endif
 colorscheme elflord
 "colorscheme delek
 "カラースキーム 推奨 #railscasts
+
+" キーマッピング Ctrl + c で、NERDTreeを開く
+nnoremap <silent><C-e> :NERDTreeToggle<CR>
