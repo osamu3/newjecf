@@ -27,6 +27,28 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 " カラースキームmolokai
 NeoBundle 'tomasr/molokai'
+" solarized カラースキーム
+  NeoBundle 'altercation/vim-colors-solarized'
+" mustang カラースキーム
+  NeoBundle 'croaker/mustang-vim'
+" wombat カラースキーム
+  NeoBundle 'jeffreyiacono/vim-colors-wombat'
+" jellybeans カラースキーム
+  NeoBundle 'nanotech/jellybeans.vim'
+" lucius カラースキーム
+  NeoBundle 'vim-scripts/Lucius'
+" zenburn カラースキーム
+  NeoBundle 'vim-scripts/Zenburn'
+" mrkn256 カラースキーム
+  NeoBundle 'mrkn/mrkn256.vim'
+" railscasts カラースキーム
+  NeoBundle 'jpo/vim-railscasts-theme'
+" pyte カラースキーム
+  NeoBundle 'therubymug/vim-pyte'
+" カラースキーム一覧表示に Unite.vim を使う
+  NeoBundle 'Shougo/unite.vim'
+  NeoBundle 'ujihisa/unite-colorscheme'
+
 " ステータスラインの表示内容強化
 NeoBundle 'itchyny/lightline.vim'
 " インデントの可視化
@@ -237,3 +259,7 @@ if executable('ag')
   let g:ctrlp_user_command='ag %s -i --hidden -g ""' " 「ag」の検索設定
 endif
 
+
+colorscheme elflord
+"colorscheme delek
+"カラースキーム 推奨 #railscasts
