@@ -7,9 +7,21 @@ fi
 
 # User specific environment and startup programs
 
-PATH=$PATH:$HOME/.local/bin:$HOME/bin
+export PATH=$PATH:$HOME/.local/bin:$HOME/bin
 
-export PATH
+#↓これはいらね。
+#PATH=$PATH:/home/osm/node_modules/.bin
+
+#突然パスが通らなくなったので、追加 H31.3.28
+#export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:$PATH
+
+#Node用Moduleライブライへのパスを追加 H31.3.26
+#export PATH=/usr/local/share/npm/bin:$PATH
+#export NODE_PATH=/usr/local/lib/node_modules
+
+#export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/share/npm/bin:$PATH
+#export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/share/npm/bin
+export NODE_PATH=/usr/local/lib/node_modules
 
 ###### Modified by osamu at H3.13.19
 #source $HOME/.git-completion.bash ←TI think this line is not necessary
@@ -49,3 +61,4 @@ GIT_PS1_SHOWCOLORHINTS=true
 #export PS1='\W/\u:\[\e[1;32m$(__git_ps1 "%s")\[\e[0m\]\$ '
 export PS1='\[\033[1;34m\w\[\033[00m\]:\[\033[1;32m\]\u\[\033[1;31m\]$(__git_ps1)\[\033[00m\]\$ '
 #export PS1='\[\033[1;32m\]\u\[\033[00m\]:\[\033[1;34m\]\w\[\033[1;31m\]$(__git_ps1)\[\033[00m\] \$ '
+#Node.Jsのライブラリモジュールが呼び出せなくなった(command not found)ので追加した
