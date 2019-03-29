@@ -25,3 +25,5 @@ stopPrxy.sh
 public/phot/
 views/favicon.ico
 exTest/
+.lesshst
+.rnd
