@@ -19,7 +19,7 @@ const PORT = 8080;
 let userId;
 
 //app.set('view engin','html');
-app.set('view engin','ejs');
+//app.set('view engin','ejs');
 
 
 //Express での静的ファイルの提供 ←重要

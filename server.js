@@ -14,7 +14,7 @@ const http    = require('https').Server(app);
 //const io      = require('socket.io').listen(server);
 const io      = require('socket.io')(http);
 
-http.listen(PORT,() => console.log('Server listening on Port:' + PORT));
+http.listen(PORT,() => console.log('Var0.1 Server listening on Port:' + PORT));
 
 let userId;
 
@@ -24,18 +24,16 @@ app.set('view engine', 'ejs');
 //app.engine('html',require('ejs').renderFile);//<- 'html'を使えるように
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(express.static(path.join(__dirname, 'public')));
 
 //Express での静的ファイルの提供 ←重要
 //http://expressjs.com/ja/starter/static-files.htmlより
 app.use('/static', express.static('public'));//←別名定義例(クライアント側で使用)これで、"public"を"/static" で利用できる。
 app.use(express.static('public'));  //パス文字列無しで"public"を使用できるように設定。
+app.use(express.static(path.join(__dirname, 'public')));
 
 //↓ルートへのアクセスで、rootAccdd(./routes/index.js)を呼び出す。
 //index.js内のapp.get('/'…)で、描画するファイルを指定している。
 app.use('/', rootAccss);
-
-
 
 //↓のエラー処理は、ルーティングの指定より後にしないとエラーが出る。
 //cf:https://chaika.hatenablog.com/entry/2015/10/07/135131
@@ -47,6 +45,9 @@ app.use(function (req, res, next) {
 });
 
 //app.get('/', (req, res) => res.send('Hello World!'));
+
+/*
+
 
 ////接続確立時の処理
 io.on('connection', function (socket) {
@@ -107,12 +108,10 @@ io.on('connection', function (socket) {
     });
 });
 /////////////////////////参考//////////////
-/*
     io.sockets.emit("info", "全員に送信")　//送信元含む全員に送信
     io.emit("info", "省略可")　//上と同じ
     socket.broadcast.emit("info", "送信元以外に送信")　//送信元以外の全員に送信
     io.to(socket.id).emit('info', '送信元にだけ')　//特定のユーザーのみ（送信元のみに送信）
 
-*/
 /////////////////////////////////////////////;
-
+*/
