@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
 const path    = require('path');
-//const favicon = require('serve-favicon'); const | var
-var favicon = require('serve-favicon'); //const | var
+const favicon = require('serve-favicon'); 
 //const fs      = require('fs');
 
 var http = require('http');
@@ -13,9 +12,11 @@ const io      = require('socket.io')(http);
 
 let userId;
 
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(favicon(path.join(__dirname,'public','favicon.ico')));
-app.use('/favicon.ico', express.static('public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico', {
+	maxAge: 2592000000 // キャッシュの有効期限
+  }));
+//app.use('/favicon.ico', express.static('public/favicon.ico'));
+
 app.use("/public", express.static('public')); 
 
 app.set('view engin', 'ejs');
