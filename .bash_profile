@@ -59,6 +59,6 @@ GIT_PS1_SHOWCOLORHINTS=true
 # https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 
 #export PS1='\W/\u:\[\e[1;32m$(__git_ps1 "%s")\[\e[0m\]\$ '
-export PS1='\[\033[1;34m\w\[\033[00m\]:\[\033[1;32m\]\u\[\033[1;31m\]$(__git_ps1)\[\033[00m\]\$ '
+export PS1='MP\[\033[1;34m\w\[\033[00m\]:\[\033[1;32m\]\u\[\033[1;31m\]$(__git_ps1)\[\033[00m\]\$ '
 #export PS1='\[\033[1;32m\]\u\[\033[00m\]:\[\033[1;34m\]\w\[\033[1;31m\]$(__git_ps1)\[\033[00m\] \$ '
 #Node.Jsのライブラリモジュールが呼び出せなくなった(command not found)ので追加した

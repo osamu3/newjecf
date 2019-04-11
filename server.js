@@ -1,117 +1,163 @@
-'use strict';
-//const debug   = require('debug');
-const express = require('express');
-const path    = require('path');
-const favicon = require('serve-favicon');
-const fs      = require('fs');
-// app.use/routes/etc...
-const rootAccss  = require('./routes/index');
+﻿'use strict';
+const express = require("express");
+const app = express();
+//サーバデブロイ時には、「https」にすると、ワーニングが出なくなる。ローカル接続では、https証明の発行ができいないので、だめ。
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
 
-const app     = express();
-const PORT    = 8080;
-const http    = require('https').Server(app);
-//const server  = app.listen(PORT, () => console.log('Example app listening on port 8080!'));
-//const io      = require('socket.io').listen(server);
-const io      = require('socket.io')(http);
+//var multer = require('multer'); ファイル保存関係
+//var mkdirp = require("mkdirp");ディレクト作成
 
-http.listen(PORT,() => console.log('Var0.1 Server listening on Port:' + PORT));
+var fs = require("fs");
+const path = require('path');
 
-let userId;
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-//app.engine('html',require('ejs').renderFile);//<- 'html'を使えるように
-
-app.use(favicon(__dirname + '/public/favicon.ico'));
+//var async = require('async');
 
 //Express での静的ファイルの提供 ←重要
 //http://expressjs.com/ja/starter/static-files.htmlより
-app.use('/static', express.static('public'));//←別名定義例(クライアント側で使用)これで、"public"を"/static" で利用できる。
-app.use(express.static('public'));  //パス文字列無しで"public"を使用できるように設定。
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use('/static', express.static('public'));//←別名定義例(クライアント側で使用)これで、"public"を"/static" で利用できる。
+//app.use(express.static('public'));	//パス文字列無しで"public"を使用できるように設定。
 
-//↓ルートへのアクセスで、rootAccdd(./routes/index.js)を呼び出す。
-//index.js内のapp.get('/'…)で、描画するファイルを指定している。
-app.use('/', rootAccss);
+// cssやjavascriptやイメージ等の静的ファイルを利用するためのおまじない。//////////////////////
+//http://expressjs.com/ja/starter/static-files.htmlより
+//express.staticミドルウエア へ静的アセットファイルを格納しているディレクトリを渡す。
+app.use(express.static(path.join(__dirname, 'public')));   //←でパス文字無しで"public"に格納されている静的ファイルを利用できる。
+//※↑た express.static 関数に指定するパスは、node 起動ディレクトリーからの相対パスであるから、絶対パスで定義する方が安全
 
-//↓のエラー処理は、ルーティングの指定より後にしないとエラーが出る。
-//cf:https://chaika.hatenablog.com/entry/2015/10/07/135131
-// catch 404 and forward to error handler ← 404発生時の処理
-app.use(function (req, res, next) {
-    var err = new Error('Not---- Found');
-    err.status = 404;
-    next(err);
+//cf: app.use('/static', express.static('public'));//←別名定義例：この定義で、クライアントから、"/public"を"/static" として利用できる。
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+// (クライアント側設定)View EngineにEJSを指定。
+app.set('view engine', 'ejs');
+
+// "/"へのGETリクエストで/views/index.ejsを表示する。拡張子（.ejs）は省略されていることに注意。
+app.get("/", function (req, res, next) {
+	res.render("index", {});
 });
 
-//app.get('/', (req, res) => res.send('Hello World!'));
+// "/imgUplodForm"へのGETリクエストで/views/imgUpLoadForm.ejsを表示する。拡張子（.ejs）は省略されていることに注意。
+app.get("/imgUploadForm", function (req, res, next) {
+	res.render("imgUploadForm", {});
+});
 
+function regionDamy1(){ //multerを使ったファイル保存関係の コード
+	/*
+	//↓https://dev.classmethod.jp/server-side/node-express-multer-file-upload/
+	const storage = multer.diskStorage({
+		// ファイルの保存先を指定
+		destination: function (req, file, cllBk) {
+			cllBk(null, './public/UploadPhotos');//保存ディレクトリセット
+		},
+		filename: function (req, file, cllBk) {				//↓こうすることであえてファイル拡張子をつけなくてもよい。
+			//cllBk(null, Date.now() + '-' + file.originalname);//保存するファイル名を現在時+オリジナル名とします。
+			cllBk(null, Date.now() + '.JPG');//ファイル名がどんどん長くなることを防ぐためオリジナル名は使わない。※『JPG』は大文字
+		}
+	});
+	//var uploaderByMlter = multer({ storage: storage }).array('eventPhoto');//eventPhotoは、HTML内のフィールド名のこと
+	//↑https://dev.classmethod.jp/server-side/node-express-multer-file-upload/
+
+	//↑で定義してある『uploaderByMlter』関数にて↓で『req.filename』としてファイル名が取り出せる。
+	app.post('/images', uploaderByMlter, function (req, res, next) {
+		var pstDt = JSON.stringify(req.body);//ポストされたデータをJSON文字列としてセット
+		const fileUniqueName = "./public/eventData/" + JSON.parse(pstDt).eventId + ".json";//ポスト時の、submitButtonに付加されたUDIをポストデータ保存時のUIDとする。
+
+		//ポストされたデータに、ファイル名を追加するため、一旦最後の"}"を","に変更
+		pstDt = pstDt.replace("}", ",");
+		//pstDt = JSON.parse(pstDt); //ジャバスクリプトオブジェクトにする。←必要性検証済み
+
+		var imgFileNames = '"imgFileNames":[';
+		var mimetypes = '"mimetype":[';
+		var filePaths = '"filePath":[';
+		for (var i = 0; i < req.files.length; i++) {//添付ファイルの個数だけループ
+			imgFileNames += '"' + req.files[i].filename + '",';
+			mimetypes += '"' + req.files[i].mimetype + '",'; //画像ファイルのタイプ
+			filePaths += '"' + req.files[i].path + '",';
+		}
+		//最後のカンマを削除し"]"を付け加える
+		imgFileNames = imgFileNames.substr(0, imgFileNames.length - 1) + "]";
+		mimetypes = mimetypes.substr(0, mimetypes.length - 1) + "]";
+		filePaths = filePaths.substr(0, filePaths.length - 1) + "]";
+
+		//写真ファイル名を配列に追加すること
+		pstDt += '"imgFiles":{' + imgFileNames + "," + mimetypes + "," + filePaths + "}}"
+
+		//ファイル保存
+		fs.writeFile(fileUniqueName, pstDt, function (err) {
+			if (err) { throw err; }
+			console.log("アップロード完了");
+			res.status(200).json({ msg: 'アップロード完了\nこの画面を閉じてください。' });
+		});
+	});
+	*/
+}
+//listen()メソッドを実行してポートで待ち受け。
+//var port = process.env.PORT || 1337;
+const  port = 8080;
+
+http.listen(port, () => {
+	console.log(`listening on *:${port}`);
+});
+
+//IOソケットイベント
+io.sockets.on('connection', function (socket) {
+	var AllEvntData = [];//サーバーに保存してある全てのイベントデータ
+	//socket Emit send Event All Data.
+	console.log('=== クライアントの接続がありました。==');
+	console.log(JSON.stringify(socket.handshake));
+
+	//クライアントから全てのイベントファイルデータの送信要求があった。。
+	socket.on('C2S:sendRequestEventFilesData', function () {
+		//イベントデータファイル一覧を配列に入れて、ソケットでクライアントへ送信。
+		let flist;
+		//ファイル一覧取得
+		flist = fs.readdirSync('./public/eventData');
+		for (let fnm of flist) {
+			if (fnm.match(/.json$/)) {//JSONファイルなら
+				AllEvntData.push(//ファイルの読み込み。読み込んだファイルはJSON文字列
+					fs.readFileSync('./public/eventData/' + fnm, 'utf8',
+						function (err, jsnDt) {
+							if (err) { throw err; }
+							return JSON.parse(jsnDt);//読み込まれた「jsnDt」はJSON文字列なので、配列に変換してリターンする。
+						}
+					)
+				);
+			}
+		}
+		socket.emit("S2C:sendAllEventData", AllEvntData);//どうも配列としてsocket送信する訳だが、送信時に文字列(JSON)に変換されるようだ。
+	});
+
+	//孫クライアントから全てのイベントファイルデータの送信要求があった。。
+	socket.on('CC2S:sendRequestEventFilesData', function () {
+		if (AllEvntData != null)
+			socket.emit("S2CC:sendAllEventData", AllEvntData);//配列が、送信時に文字列(JSON)に変換されるようだ。
+	});
+
+	function regionDamy2(){ //multerを使ったファイル送信関係の コード
 /*
+	//孫クライアントからの画像データ送信要求があった。。
 
+	socket.on('CC2S:sendRequestImgData', function (fileNm) {
+		var fs = require('fs');
+		const path = './public/UploadPhotos/' + fileNm;
 
-////接続確立時の処理
-io.on('connection', function (socket) {
-    console.log('connected!! socket.id=' + socket.id);
-    //ブラウザからの着信:[msg]は、'takeAPic''openTheDoor''ContinueToProcess?'の３種類のはず
-    socket.on('Bs2Sv', function (msg) {
-        console.log('(server.js:L52)：→GetMessage(Bs2Sv【'+msg+'】):Browser→Server');
-
-        if (msg === 'ContinueToProcess?') {//ブラウザからの処理継続要求、(※注！ラズパイは別)
-            if (userId != null) { //既に接続が完了している場合、新たな接続は受け付けない
-                console.log('    Already Connected! 接続不許可、切断します。')
-                io.to(socket.id).emit('Sv2Bs', 'Disconnnect')//着信メッセージの送り主に返信
-                io.sockets.connected[socket.id].disconnect();
-            } else {
-                userId = socket.id;//たった今接続してきたユーザのsocketIdをとる。
-                //接続を継続し、写真を撮るを準備せよ。をブロードキャストする。
-                console.log('(server.js:L62)：    ←BroadCast(Sv2Bs【ContinueOK】):Browser←Server)');
-                io.emit('Sv2Bs', 'ContinueOK');
-            }
-        }
-
-        if (msg === 'OpenTheDoor') {//ブラウザからの写真撮影準備要求
-            console.log('(server.js:L68)：    ←BroadCast(Sv2Pi【OpenTheDoor】):Pi←Server)');
-            io.emit('Sv2Pi', msg);//[openTheDoor]を送信：邪魔臭いのでブロードキャスト
-            console.log('');
-        }
-
-        if (msg === 'TakeAPic') {//ブラウザから写真撮影依頼
-            console.log('(server.js:L74)：    ←BroadCast(Sv2Pi【TakeAPic】:Pi←Server)');
-            io.emit('Sv2Pi', msg);//[takeAPic]をブロードキャスト送信
-            //コマンド送信後5秒後、リセット送信。←本番は15秒？
-            setTimeout(function () {
-                console.log('(server.js:L78)←BroadCast(Sv2All【Reset】):Pi←Server');
-                io.emit('Sv2All', 'Reset');
-                console.log('');
-            }, 5000);
-        }
-    });
-
-    //パイからの受信:[msg]は、パイ側でソケットコネクトイベントが発火した旨の通知のはず
-    socket.on('Pi2Sv', function (msg) {
-        console.log('(server.js:L85)Piメッセージ('+msg+')を転送した方がよいのでは？');
-        console.log('');
-    });
-
-    //ラズパイからの、FTPアップロード完了のメッセージを受信
-    socket.on('Pi2UpLoadPht', function (photUName) {//一意な写真ファイル名
-        console.log("(server.js:L42)サーバーログ:ラズパイから画像転送がありました。:" +photUName);
-        //サーバーから写真転送完了のお知らせをクライアントへ通知
-        io.emit('Sv2FtpPht', photUName);//クライアント側ではリロード
-        console.log("(server.js:L45)emit:Sv2FtpPht");
-    });
-
-    socket.on("disconnect", function () {
-        console.log("[disconnect]イベントが発生:   GET OUT !!   ");
-        userId = null; //ブラウザからは、誰も接続していないことにする。※注！ラズパイは別
-        console.log("userIdを初期化\n");
-    });
+		fs.stat(path, (error, stats) => {
+			if (error) {
+				console.log('ファイル【' + path + '】が見つからないない。');
+				socket.emit("S2CC:ErrNoSuchFile", path);
+			} else {
+				//KnowHw画像ファイルをBase64データにしてソケットで送る
+				fs.readFile(path, function (err, data) {
+					var prefix = 'data:image/jpeg;base64,',
+						base64 = new Buffer(data, 'binary').toString('base64'),
+						sendData = prefix + base64;
+					//孫へソケットにて画像送信
+					socket.emit("S2CC:sendBase64ImgData", sendData);
+				});
+			}
+		});
+	});
+	*/
+    }
 });
-/////////////////////////参考//////////////
-    io.sockets.emit("info", "全員に送信")　//送信元含む全員に送信
-    io.emit("info", "省略可")　//上と同じ
-    socket.broadcast.emit("info", "送信元以外に送信")　//送信元以外の全員に送信
-    io.to(socket.id).emit('info', '送信元にだけ')　//特定のユーザーのみ（送信元のみに送信）
-
-/////////////////////////////////////////////;
-*/
